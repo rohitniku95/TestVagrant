@@ -1,0 +1,44 @@
+class RecentlyPlayedSong {
+    private int capacity;
+    private Map<String, LinkedList<String>> userSongsMap;
+
+    public RecentlyPlayedStore(int capacity) {
+        this.capacity = capacity;
+        userSongsMap = new HashMap<>();
+    }
+
+    public void addSong(String user, String song) {
+        if (!userSongsMap.containsKey(user)) {
+            userSongsMap.put(user, new LinkedList<>());
+        }
+
+        LinkedList<String> playlist = userSongsMap.get(user);
+        playlist.addFirst(song);
+
+        if (playlist.size() > capacity) {
+            playlist.removeLast();
+        }
+    }
+
+    public LinkedList<String> getRecentlyPlayedSongs(String user) {
+        return userSongsMap.get(user);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        RecentlyPlayedStore store = new RecentlyPlayedStore(3);
+        
+        store.addSong("user1", "s1");
+        store.addSong("user1", "s2");
+        store.addSong("user1", "s3");
+        System.out.println(store.getRecentlyPlayedSongs("user1")); // Output: [s3, s2, s1]
+
+        store.addSong("user1", "s4");
+        System.out.println(store.getRecentlyPlayedSongs("user1")); // Output: [s4, s3, s2]
+
+        store.addSong("user1", "s2");
+        store.addSong("user1", "s1");
+        System.out.println(store.getRecentlyPlayedSongs("user1")); // Output: [s1, s2, s4]
+    }
+}
